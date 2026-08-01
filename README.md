@@ -36,7 +36,7 @@ evaluates the resulting long-short portfolio net of transaction costs.
 | Momentum lookback | 20 | 40 | 60 | 90 | 120 |
 |-------------------|-----|-----|-----|-----|-----|
 | Sharpe            | -0.19 | -0.10 | -0.11 | 0.16 | 0.38 |
-
+![Momentum Sensitivity](results/momentum_sensitivity.png)
 ## How to Run
 ```bash
 pip install yfinance pandas numpy matplotlib
