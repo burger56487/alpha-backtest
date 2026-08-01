@@ -1,9 +1,9 @@
 # backtest.py
 import numpy as np
-
+import pandas as pd
 def backtest(signal, returns, quantile=0.2):
     """signal 决定持仓,returns 是下一期收益"""
-    positions = pd.DataFrame(0, index=signal.index, columns=signal.columns)
+    positions = pd.DataFrame(0.0, index=signal.index, columns=signal.columns)
     for date in signal.index:
         s = signal.loc[date].dropna()
         if len(s) < 10:
