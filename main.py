@@ -26,7 +26,7 @@ def get_data(start="2019-01-01", end="2024-01-01"):
     return prices
 
 def run_factor(signal, returns, cost_bps=0.0):
-    """返回:扣成本后的组合日收益, 绩效字典"""
+    """Return daily portfolio returns after costs and a performance metrics dict."""
     port_ret, positions = backtest(signal, returns)
     turnover = positions.diff().abs().sum(axis=1)
     port_ret_net = port_ret - turnover * (cost_bps / 1e4)
@@ -48,15 +48,15 @@ def main():
     os.makedirs("results", exist_ok=True)
 
     # ------------------------------------------------------------------
-    # 增强 1: 无成本 vs 有成本 对比
+    # Enhancement 1: Gross vs net cost comparison
     # ------------------------------------------------------------------
     plt.figure(figsize=(10, 6))
     rows = []
     for name, sig in signals.items():
         sig = sig.reindex(returns.index)
-        # 无成本
+        # No cost
         _, perf_gross = run_factor(sig, returns, cost_bps=0.0)
-        # 有成本 (5bp)
+        # With cost (5bp)
         port_net, perf_net = run_factor(sig, returns, cost_bps=5.0)
         rows.append({
             "Factor": name,
@@ -80,7 +80,7 @@ def main():
     print(summary.to_string())
 
     # ------------------------------------------------------------------
-    # 增强 2: momentum lookback 敏感性 + 柱状图
+    # Enhancement 2: Momentum lookback sensitivity + bar chart
     # ------------------------------------------------------------------
     lookbacks = [20, 40, 60, 90, 120]
     sharpes = []
@@ -92,7 +92,7 @@ def main():
         print(f"  lookback={lb:>3d}:  Sharpe={perf['Sharpe']:.2f}")
 
     plt.figure(figsize=(8, 5))
-    colors = ["#d9534f" if s < 0 else "#5cb85c" for s in sharpes]  # 负红正绿
+    colors = ["#d9534f" if s < 0 else "#5cb85c" for s in sharpes]  # Negative red, positive green
     plt.bar([str(lb) for lb in lookbacks], sharpes, color=colors)
     plt.axhline(0, color="black", linewidth=0.8)
     plt.title("Momentum Sharpe vs Lookback Horizon (net 5bp)")
